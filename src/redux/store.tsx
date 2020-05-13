@@ -5,7 +5,8 @@ import userReducer from "./user.reducer";
 
 const loggerMiddleware = createLogger();
 
-export default createStore(combineReducers({
+export default createStore(
+    combineReducers({
         userReducer,
     }),
     {}, // Preloaded state
