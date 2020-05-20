@@ -1,10 +1,12 @@
 import React from "react";
-import {connect} from "react-redux";
-import {Redirect, withRouter} from "react-router-dom";
-import {Button, FormControl, Input, InputLabel, makeStyles, createStyles} from "@material-ui/core";
-import {Alert} from "@material-ui/lab";
+import { connect } from "react-redux";
+import { Redirect, withRouter } from "react-router-dom";
+import { Button, FormControl, Input, InputLabel, InputAdornment, IconButton } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import { login } from "../../redux/user.actions";
-import { styles } from "./register.styles";
+import { StyledRegisterForm as StyledForm, StyledFormControl } from "./Register.styles";
+import config from "../../config.json";
+import { Visibility, VisibilityOff, Label } from "@material-ui/icons";
 
 interface RegisterUser {
     username: string;
@@ -14,25 +16,24 @@ interface RegisterUser {
 
 const Register = (props: any) => {
     // Get style classes
-    const classes = makeStyles(createStyles(styles))
-
     const [username, setUsername] = React.useState('')
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const [passwordRepeat, setPasswordRepeat] = React.useState('');
+    const [repeatPassword, setRepeatPassword] = React.useState('');
 
     const [showPassword, setShowPassword] = React.useState(false);
-    const [showPasswordRepeat, setShowPasswordRepeat] = React.useState(false);
+    const [showRepeatPassword, setShowRepeatPassword] = React.useState(false);
 
     const [error, setError] = React.useState(<div/>);
 
     const onUsernameChange = (event: any) => setUsername(event.target.value);
     const onEmailChange = (event: any) => setEmail(event.target.value);
     const onPasswordChange = (event: any) => setPassword(event.target.value);
-    const onPasswordRepeatChange = (event: any) => setPasswordRepeat(event.target.value);
+    const onRepeatPasswordChange = (event: any) => setRepeatPassword(event.target.value);
 
-    const handleClickShowPassword = () => setShowPassword(!setPassword);
-    const handleClickShowPasswordRepeat = () => setShowPasswordRepeat(!setPasswordRepeat);
+    const handleClickShowPassword = () => setShowPassword(!showPassword);
+    const handleClickShowRepeatPassword = () => setShowRepeatPassword(!showRepeatPassword);
+    const handleMouseDownPassword = (event: any) => event?.preventDefault();
 
     const validateInput = (): boolean => {
         // Check if username is too short
@@ -57,19 +58,8 @@ const Register = (props: any) => {
             return false;
         }
 
-        // Check if password is too short
-        if (password.length < 8) {
-            setError(
-                <Alert severity="error">
-                    The password is too short.
-                </Alert>
-            )
-
-            return false;
-        }
-
         // Check if passwords are the same
-        if (password !== passwordRepeat) {
+        if (password !== repeatPassword) {
             setError(
                 <Alert severity="error">
                     The passwords do not match.
@@ -85,7 +75,7 @@ const Register = (props: any) => {
         if (!email.match(emailRegex)) {
             setError(
                 <Alert severity="error">
-                    The email is not valid
+                    The email is not valid.
                 </Alert>
             )
 
@@ -98,7 +88,7 @@ const Register = (props: any) => {
         if (!password.match(passwordRegex)) {
             setError(
                 <Alert severity="error">
-                    The password is not valid. Make sure the password contains atleast: 1 lower case, 1 upper case, 1 number and 1 special character.
+                    The password is not valid. Make sure the password is minimal 8 characters long and contains atleast: 1 lower case, 1 upper case, 1 number and 1 special character.
                 </Alert>
             )
             return false;
@@ -107,12 +97,12 @@ const Register = (props: any) => {
         return true;
     }
 
-    const register = async () => {
+    // Register with password
+    const registerPassword = async () => {
         // Validate input
-        if (!validateInput()) {
+        if (!validateInput()) {   
             return;
         }
-
         // Create user JSON object
         const user: RegisterUser = {
             username: username,
@@ -130,7 +120,7 @@ const Register = (props: any) => {
         };
 
         // Send API call
-        const response = await fetch("config.SERVICES.USER_SERVICE", options);
+        const response = await fetch(config.SERVICES.USER, options);
 
         // OK status code
         if (response.status === 200) {
@@ -139,7 +129,7 @@ const Register = (props: any) => {
 
             return;
         }
-        
+
         // Get error message from response
         const errorMessage = await response.text();
 
@@ -152,13 +142,18 @@ const Register = (props: any) => {
         return;
     }
 
-    const content = props.auth.isAuthenticated ? (
+    const content = props?.user?.isAuthenticated ? (
         <Redirect to={{
             pathname: '/'
         }} />
     ) : (
-        <div className="register-form">
-            <FormControl variant="outlined">
+        <StyledForm>
+            {error}
+            <h2>Register</h2>
+            <StyledFormControl 
+                variant="outlined"
+                fullWidth={true}
+            >
                 <InputLabel>Username</InputLabel>
                 <Input 
                     error={false}
@@ -167,8 +162,73 @@ const Register = (props: any) => {
                     value={username}
                     onChange={onUsernameChange}
                 />
-            </FormControl>
-        </div>
+            </StyledFormControl>
+            <StyledFormControl 
+                variant="outlined"
+                fullWidth={true}
+            >
+                <InputLabel>Email</InputLabel>
+                <Input 
+                    error={false}
+                    required={true}
+                    type="text"
+                    value={email}
+                    onChange={onEmailChange}
+                />
+            </StyledFormControl>
+            <StyledFormControl 
+                variant="outlined"
+                fullWidth={true}
+            >
+                <InputLabel>Password</InputLabel>
+                <Input
+                    error={false}
+                    required={true}
+                    type={showPassword ? "text" : "password"}
+                    onChange={onPasswordChange}
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <IconButton
+                                aria-label="Toggle password visibility."
+                                onClick={handleClickShowPassword}
+                                onMouseDown={handleMouseDownPassword}
+                            >
+                                {showPassword ? <Visibility /> : <VisibilityOff />}
+                            </IconButton>
+                        </InputAdornment>
+                    }
+                />
+            </StyledFormControl>
+            <StyledFormControl 
+                variant="outlined"
+                fullWidth={true}
+            >
+                <InputLabel>Repeat Password</InputLabel>
+                <Input
+                    error={false}
+                    required={true}
+                    type={showRepeatPassword ? "text" : "password"}
+                    onChange={onRepeatPasswordChange}
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <IconButton
+                                aria-label="Toggle password visibility."
+                                onClick={handleClickShowRepeatPassword}
+                                onMouseDown={handleMouseDownPassword}
+                            >
+                                {showRepeatPassword ? <Visibility /> : <VisibilityOff />}
+                            </IconButton>
+                        </InputAdornment>
+                    }
+                />
+            </StyledFormControl>
+            <Button 
+                variant="outlined" 
+                onClick={registerPassword}
+            >
+                Register
+            </Button>
+        </StyledForm>
     );
 
     return (
@@ -180,7 +240,7 @@ const Register = (props: any) => {
 
 const mapStateToProps = (state: any) => {
     return {
-        auth: state.auth
+        user: state.user
     };
 };
 

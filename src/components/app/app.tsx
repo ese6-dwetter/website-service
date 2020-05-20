@@ -1,30 +1,29 @@
 import React from "react";
-import logo from "../../logo.svg";
-import "./app.css";
 import { Provider } from "react-redux";
-import { Router, Route, Switch } from "react-router-dom";
-import NavigationBar from "../navigation-bar/navigation-bar";
+import { Route, Switch, BrowserRouter } from "react-router-dom";
+import NavigationBar from "../navigation-bar/NavigationBar";
 import store from "../../redux/store";
-import Register from "../register/register";
+import Register from "../register/Register";
+import { StyledContainer } from "./App.styles";
 
-function app() {
+function App() {
     return (
-        <React.StrictMode>
-            <Provider store={store}>
-                <Router>
-                    <div className="app-container">
-                        <NavigationBar />
-                        <main role="main" className={"container"}>
-                            <Switch>
-                                <Route exact path="/" />
-                                <Route path="/register" component={Register} />
-                            </Switch>
-                        </main>
-                    </div>
-                </Router>
-            </Provider>
-        </React.StrictMode>
+            <React.StrictMode>
+                <Provider store={store}>
+                    <BrowserRouter>
+                        <StyledContainer>
+                            <NavigationBar />
+                            <main role="main" className={"container"}>
+                                <Switch>
+                                    <Route exact path="/" />
+                                    <Route path="/register" component={Register} />
+                                </Switch>
+                            </main>
+                        </StyledContainer>
+                    </BrowserRouter>
+                </Provider>
+            </React.StrictMode>
     );
 }
 
-export default app;
+export default App;
