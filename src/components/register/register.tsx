@@ -40,7 +40,7 @@ const Register = (props: any) => {
         if (username.length < 6) {
             setError(
                 <Alert severity="error">
-                    The username is too short.
+                    The username must be at least 6 characters long.
                 </Alert>
             )
 
@@ -48,10 +48,10 @@ const Register = (props: any) => {
         }
 
         // Check if email is too short
-        if (email.length < 6) {
+        if (email.length < 5) {
             setError(
                 <Alert severity="error">
-                    The email is too short.
+                    The email must be at least 5 characters long.
                 </Alert>
             )
 
@@ -120,7 +120,7 @@ const Register = (props: any) => {
         };
 
         // Send API call
-        const response = await fetch(config.SERVICES.USER, options);
+        const response = await fetch(config.API.USERSERVICE, options);
 
         // OK status code
         if (response.status === 200) {

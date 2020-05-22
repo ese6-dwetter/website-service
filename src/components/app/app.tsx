@@ -8,21 +8,21 @@ import { StyledContainer } from "./App.styles";
 
 function App() {
     return (
-            <React.StrictMode>
+        <React.StrictMode>
+            <StyledContainer>
                 <Provider store={store}>
                     <BrowserRouter>
-                        <StyledContainer>
                             <NavigationBar />
-                            <main role="main" className={"container"}>
+                            <main role="main">
                                 <Switch>
                                     <Route exact path="/" />
                                     <Route path="/register" component={Register} />
                                 </Switch>
                             </main>
-                        </StyledContainer>
                     </BrowserRouter>
                 </Provider>
-            </React.StrictMode>
+            </StyledContainer>
+        </React.StrictMode>
     );
 }
 

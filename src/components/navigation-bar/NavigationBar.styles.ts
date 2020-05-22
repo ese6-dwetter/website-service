@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import { AppBar, Toolbar } from "@material-ui/core";
 
 export const StyledToolbar = styled(Toolbar)`
-    background-color: #FF0000;
+    background-color: #0000AA;
 `;
 export const StyledAccountCircle = styled(AccountCircle)`
     width: 40;

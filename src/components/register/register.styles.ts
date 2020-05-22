@@ -6,7 +6,6 @@ export const StyledRegisterForm = styled.form`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #EEEEEE;
     margin: 100px;
     padding: 20px;
     border-radius: 20px;
