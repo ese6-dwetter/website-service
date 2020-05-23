@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { AccountCircle } from "@material-ui/icons";
 import { NavLink } from "react-router-dom";
-import { AppBar, Toolbar } from "@material-ui/core";
+import { Toolbar } from "@material-ui/core";
 
 export const StyledToolbar = styled(Toolbar)`
     background-color: #0000AA;

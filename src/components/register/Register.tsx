@@ -1,12 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Redirect, withRouter } from "react-router-dom";
-import { Button, FormControl, Input, InputLabel, InputAdornment, IconButton } from "@material-ui/core";
+import { Button, Input, InputLabel, InputAdornment, IconButton } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { login } from "../../redux/user.actions";
 import { StyledRegisterForm as StyledForm, StyledFormControl } from "./Register.styles";
 import config from "../../config.json";
-import { Visibility, VisibilityOff, Label } from "@material-ui/icons";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 
 interface RegisterUser {
     username: string;
@@ -68,11 +68,11 @@ const Register = (props: any) => {
 
             return false;
         }
-
-        // Check email regex
-        const emailRegex = /^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*@((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))\z/;
         
-        if (!email.match(emailRegex)) {
+        // Check email regex
+        const emailRegex = new RegExp("^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*@((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))\z");
+        
+        if (!emailRegex.test(email)) {
             setError(
                 <Alert severity="error">
                     The email is not valid.
@@ -83,14 +83,15 @@ const Register = (props: any) => {
         }
 
         // Check password regex
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$/;
+        const passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$/");
         
-        if (!password.match(passwordRegex)) {
+        if (!passwordRegex.test(password)) {
             setError(
                 <Alert severity="error">
                     The password is not valid. Make sure the password is minimal 8 characters long and contains atleast: 1 lower case, 1 upper case, 1 number and 1 special character.
                 </Alert>
             )
+
             return false;
         }
 

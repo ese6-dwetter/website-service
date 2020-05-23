@@ -2,10 +2,10 @@ import React from "react";
 import { StyledNavLink, StyledToolbar, StyledAccountCircle } from "./NavigationBar.styles"
 import { logout } from "../../redux/user.actions";
 import { connect } from "react-redux";
-import { withRouter, NavLink } from "react-router-dom";
-import { IconButton, AppBar, Toolbar, Menu, MenuItem} from "@material-ui/core";
+import { withRouter } from "react-router-dom";
+import { IconButton, AppBar, Menu, MenuItem} from "@material-ui/core";
 
-const NavigationBar = (props: any) => {
+const NavigationBar = (props: any): any => {
     const [anchorElement, setAnchorElement] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorElement);
 
@@ -13,11 +13,11 @@ const NavigationBar = (props: any) => {
         setAnchorElement(event.currentTarget);
     }
 
-    const handleClose = () => {
+    const handleClose = (): void => {
         setAnchorElement(null);
     }
 
-    const logout = () => {
+    const logout = (): void => {
         handleClose();
         props.logout();
     }
