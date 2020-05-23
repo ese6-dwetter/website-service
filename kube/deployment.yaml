@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: website-microservice
-  namespace: dwetter-develop
+  namespace: dwetter
   labels:
     app: website-microservice
 spec:
