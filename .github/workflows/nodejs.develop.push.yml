@@ -27,12 +27,14 @@ jobs:
       # Build the project
       - name: Build
         run: npm run build --if-present
+        env:
+          CI: false
       
       # Test the project
       - name: Test
         run: npm test
         env:
-          CI: true
+          CI: false
 
       # Upload the release folder and Dockerfile artifacts to this GitHub workflow for use in the next job
       - name: Upload release artifact
