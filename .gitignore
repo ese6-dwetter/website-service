@@ -1,3 +1,5 @@
+**/config.json
+/build
 
 # Created by https://www.gitignore.io/api/osx,node,react,linux,windows,webstorm,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=osx,node,react,linux,windows,webstorm,visualstudiocode
