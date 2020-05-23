@@ -1,22 +1,22 @@
-import { ActionType } from "./types";
+import { UserActionType } from "./user.types";
 
 const initialState = {
-    user: null,
+    user: '',
     isAuthenticated: false
 };
 
 function userReducer(state = initialState, action: any) {
     switch (action.type) {
-        case ActionType.Login:
+        case UserActionType.Login:
             return state = {
                 ...state,
                 user: action.payload,
                 isAuthenticated: true
             };
-        case ActionType.Logout:
+        case UserActionType.Logout:
             return state = {
                 ...state,
-                user: null,
+                user: '',
                 isAuthenticated: false
             };
         default:
@@ -24,4 +24,4 @@ function userReducer(state = initialState, action: any) {
     }
 }
 
-export default userReducer;
+export default userReducer
