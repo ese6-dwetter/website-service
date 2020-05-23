@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { IconButton, AppBar, Menu, MenuItem} from "@material-ui/core";
 
-const NavigationBar = (props: any): any => {
+const NavigationBar = (props: any) => {
     const [anchorElement, setAnchorElement] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorElement);
 

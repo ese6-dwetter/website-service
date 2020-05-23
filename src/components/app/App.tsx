@@ -6,7 +6,7 @@ import store from "../../redux/store";
 import Register from "../register/Register";
 import { StyledContainer } from "./App.styles";
 
-function App() {
+const App = () => {
     return (
         <React.StrictMode>
             <StyledContainer>
