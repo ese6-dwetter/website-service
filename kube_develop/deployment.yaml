@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: website-microservice
+  namespace: dwetter-develop
+  labels:
+    app: website-microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: website-microservice
+  template:
+    metadata:
+      labels:
+        app: website-microservice
+    spec:
+      containers:
+        - image: ese6dwetter/website-microservice
+          imagePullPolicy: IfNotPresent
+          name: user-microservice
+          ports: 
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
