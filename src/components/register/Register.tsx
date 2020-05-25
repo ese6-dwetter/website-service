@@ -4,7 +4,7 @@ import { Redirect, withRouter } from "react-router-dom";
 import { Button, Input, InputLabel, InputAdornment, IconButton } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { login } from "../../redux/user.actions";
-import { StyledForm, StyledFormControl } from "./Register.styles";
+import { StyledRegisterForm, StyledFormControl } from "./Register.styles";
 import config from "../../config.json";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 
@@ -78,6 +78,7 @@ const Register = (props: any) => {
         if (!validateInput()) {   
             return;
         }
+        
         // Create user JSON object
         const user: RegisterUser = {
             username: username,
@@ -122,7 +123,7 @@ const Register = (props: any) => {
             pathname: '/'
         }} />
     ) : (
-        <StyledForm>
+        <StyledRegisterForm>
             {error}
             <h2>Register</h2>
             <StyledFormControl 
@@ -203,7 +204,7 @@ const Register = (props: any) => {
             >
                 Register
             </Button>
-        </StyledForm>
+        </StyledRegisterForm>
     );
 
     return (
