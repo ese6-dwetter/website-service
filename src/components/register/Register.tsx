@@ -4,7 +4,7 @@ import { Redirect, withRouter } from "react-router-dom";
 import { Button, Input, InputLabel, InputAdornment, IconButton } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { login } from "../../redux/user.actions";
-import { StyledRegisterForm as StyledForm, StyledFormControl } from "./Register.styles";
+import { StyledRegisterForm, StyledFormControl } from "./Register.styles";
 import config from "../../config.json";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 
@@ -69,19 +69,6 @@ const Register = (props: any) => {
             return false;
         }
 
-        // Check password regex
-        const passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$/");
-        
-        if (!passwordRegex.test(password)) {
-            setError(
-                <Alert severity="error">
-                    The password is not valid. Make sure the password is minimal 8 characters long and contains atleast: 1 lower case, 1 upper case, 1 number and 1 special character.
-                </Alert>
-            )
-
-            return false;
-        }
-
         return true;
     }
 
@@ -91,6 +78,7 @@ const Register = (props: any) => {
         if (!validateInput()) {   
             return;
         }
+        
         // Create user JSON object
         const user: RegisterUser = {
             username: username,
@@ -108,7 +96,7 @@ const Register = (props: any) => {
         };
 
         // Send API call
-        const response = await fetch(config.API.USERSERVICE, options);
+        const response = await fetch(config.API.USERSERVICE + "/register/password", options);
 
         // OK status code
         if (response.status === 200) {
@@ -135,7 +123,7 @@ const Register = (props: any) => {
             pathname: '/'
         }} />
     ) : (
-        <StyledForm>
+        <StyledRegisterForm>
             {error}
             <h2>Register</h2>
             <StyledFormControl 
@@ -216,7 +204,7 @@ const Register = (props: any) => {
             >
                 Register
             </Button>
-        </StyledForm>
+        </StyledRegisterForm>
     );
 
     return (
