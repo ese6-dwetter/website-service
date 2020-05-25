@@ -68,19 +68,6 @@ const Register = (props: any) => {
 
             return false;
         }
-        
-        // Check email regex
-        const emailRegex = new RegExp("^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*@((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))\z");
-        
-        if (!emailRegex.test(email)) {
-            setError(
-                <Alert severity="error">
-                    The email is not valid.
-                </Alert>
-            )
-
-            return false;
-        }
 
         // Check password regex
         const passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$/");
