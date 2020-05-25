@@ -16,7 +16,7 @@ const App = () => {
                             <main role="main">
                                 <Switch>
                                     <Route exact path="/" />
-                                    <Route path="/register" component={Register} />
+                                    <Route exact path="/register" component={Register} />
                                 </Switch>
                             </main>
                     </BrowserRouter>
