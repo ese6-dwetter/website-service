@@ -9,6 +9,7 @@ export const StyledRegisterForm = styled.form`
     margin: 100px;
     padding: 20px;
     border-radius: 20px;
+    background-color: #EEEEEE
 `;
 
 export const StyledFormControl = styled(FormControl)`
