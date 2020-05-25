@@ -15,12 +15,11 @@ spec:
     - host: develop.dwetter.nl
       http:
         paths:
-          - path: /
-            backend:
+          - backend:
               serviceName: website-microservice
               servicePort: 80
   tls:
-    - secretName: website-microservice-dwetter-tls
+    - secretName: website-microservice-tls
       hosts: 
         - develop.dwetter.nl
 status:
