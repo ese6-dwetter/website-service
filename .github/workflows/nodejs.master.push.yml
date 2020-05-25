@@ -100,4 +100,4 @@ jobs:
               ./kube/ingress.yaml
               ./kube/service.yaml
               ./kube/autoscaler.yaml
-            images: $DOCKER_IMAGE
+            images: "$DOCKER_IMAGE"
