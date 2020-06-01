@@ -5,6 +5,8 @@ import NavigationBar from "../navigation-bar/NavigationBar";
 import store from "../../redux/store";
 import Register from "../register/Register";
 import { StyledContainer } from "./App.styles";
+import Login from "../login/Login";
+import Home from "../home/Home";
 
 const App = () => {
     return (
@@ -15,8 +17,9 @@ const App = () => {
                             <NavigationBar />
                             <main role="main">
                                 <Switch>
-                                    <Route exact path="/" />
+                                    <Route exact path="/" component={Home} />
                                     <Route exact path="/register" component={Register} />
+                                    <Route exact path="/login" component={Login} />
                                 </Switch>
                             </main>
                     </BrowserRouter>

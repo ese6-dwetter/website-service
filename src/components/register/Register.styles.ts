@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { FormControl } from "@material-ui/core";
+import GoogleLogin from "react-google-login";
 
 export const StyledRegisterForm = styled.form`
     display: flex;
@@ -15,3 +16,7 @@ export const StyledRegisterForm = styled.form`
 export const StyledFormControl = styled(FormControl)`
     margin: 10px;
 `;
+
+export const StyledGoogleLogin = styled(GoogleLogin)`
+    margin: 10px;
+`
