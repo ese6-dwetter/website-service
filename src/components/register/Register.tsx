@@ -4,9 +4,10 @@ import { Redirect, withRouter } from "react-router-dom";
 import { Button, Input, InputLabel, InputAdornment, IconButton } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { login } from "../../redux/user.actions";
-import { StyledRegisterForm, StyledFormControl } from "./Register.styles";
+import { StyledRegisterForm, StyledFormControl, StyledGoogleLogin } from "./Register.styles";
 import config from "../../config.json";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
+import User from "../../entities/User";
 
 interface RegisterUser {
     username: string;
@@ -14,8 +15,7 @@ interface RegisterUser {
     password: string;
 }
 
-const Register = (props: any) => {
-    // Get style classes
+const Register = (props: any): any => {
     const [username, setUsername] = React.useState('')
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
@@ -24,7 +24,7 @@ const Register = (props: any) => {
     const [showPassword, setShowPassword] = React.useState(false);
     const [showRepeatPassword, setShowRepeatPassword] = React.useState(false);
 
-    const [error, setError] = React.useState(<div/>);
+    const [error, setError] = React.useState(<div />);
 
     const onUsernameChange = (event: any) => setUsername(event.target.value);
     const onEmailChange = (event: any) => setEmail(event.target.value);
@@ -96,7 +96,46 @@ const Register = (props: any) => {
         };
 
         // Send API call
-        const response = await fetch(config.API.USERSERVICE + "/register/password", options);
+        const response = await fetch(config.API.USER_SERVICE + "/register/password", options);
+
+        // OK status code
+        if (response.status === 200) {
+            setError(<div/>)
+            props.history.push("/login");
+
+            return;
+        }
+
+        // Get error message from response
+        const errorMessage = await response.text();
+
+        setError(
+            <Alert severity="error">
+                {errorMessage}
+            </Alert>
+        );
+
+        return;
+    }
+
+    const registerGoogle = async (response: any) => {
+        if (!response?.tokenId) {
+            return;
+        }
+
+        // Create request options
+        const options: RequestInit = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            mode: 'cors',
+            cache: 'default',
+            body: JSON.stringify({ tokenId: response.tokenId })
+        }
+
+        // Send API call
+        response = await fetch(config.API.USER_SERVICE + '/register/google', options);
 
         // OK status code
         if (response.status === 200) {
@@ -204,6 +243,12 @@ const Register = (props: any) => {
             >
                 Register
             </Button>
+            <StyledGoogleLogin 
+                clientId={config.GOOGLE.CLIENT_ID}
+                buttonText="Google Register"
+                onSuccess={registerGoogle}
+                onFailure={registerGoogle}
+            />
         </StyledRegisterForm>
     );
 
@@ -222,8 +267,8 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        login: (token: any) => {
-            dispatch(login(token));
+        login: (user: User) => {
+            dispatch(login(user));
         }
     }
 }

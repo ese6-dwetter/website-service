@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { FormControl } from "@material-ui/core";
 import GoogleLogin from "react-google-login";
 
-export const StyledRegisterForm = styled.form`
+export const StyledLoginForm = styled.form`
     display: flex;
     flex-direction: column;
     justify-content: center;

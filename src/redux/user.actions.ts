@@ -1,10 +1,11 @@
 import { UserActionType } from "./user.types";
+import User from "../entities/User";
 
-export function login(token: string) {
+export function login(user: User) {
     return (dispatch: any) => {
         dispatch({
             type: UserActionType.Login,
-            payload: token,
+            payload: user,
         });
     }
 }

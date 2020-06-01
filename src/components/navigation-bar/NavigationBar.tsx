@@ -1,9 +1,9 @@
 import React from "react";
-import { StyledNavLink, StyledToolbar, StyledAccountCircle } from "./NavigationBar.styles"
+import { StyledNavLink, StyledAccountCircle, StyledAppBar } from "./NavigationBar.styles"
 import { logout } from "../../redux/user.actions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { IconButton, AppBar, Menu, MenuItem} from "@material-ui/core";
+import { IconButton, Menu, MenuItem, Toolbar} from "@material-ui/core";
 
 const NavigationBar = (props: any) => {
     const [anchorElement, setAnchorElement] = React.useState<null | HTMLElement>(null);
@@ -66,14 +66,14 @@ const NavigationBar = (props: any) => {
     }
 
     return (
-        <AppBar>
-            <StyledToolbar>
+        <StyledAppBar>
+            <Toolbar>
                 <StyledNavLink  to="/">
                     Kwetter
                 </StyledNavLink>
                 {items}
-            </StyledToolbar>
-        </AppBar>
+            </Toolbar>
+        </StyledAppBar>
     )
 }
 
