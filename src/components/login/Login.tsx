@@ -28,7 +28,31 @@ const Login = (props: any) => {
     const handleClickShowPassword = () => setShowPassword(!showPassword);
     const handleMouseDownPassword = (event: any) => event?.preventDefault();
 
+    const checkResponse = async (response: any) => {
+
+        // OK status code
+        if (response.status === 200) {
+            const responseUser = await response.json();
+            console.log(responseUser)
+            props.login(responseUser)
+            props.history.push("/");
+
+            return;
+        }
+
+        // Get error message from response
+        const errorMessage = await response.text();
+
+        setError(
+            <Alert severity="error">
+                {errorMessage}
+            </Alert>
+        );
+    }
+
     const loginPassword = async () => {
+        setError(<div />);
+
         const user: LoginUser = {
             email: email,
             password: password
@@ -45,29 +69,14 @@ const Login = (props: any) => {
         // Send API call
         const response = await fetch(config.API.USER_SERVICE + "/login/password", options);
         
-        // OK status code
-        if (response.status === 200) {
-            setError(<div/>);
-            const responseUser = await response.json();
-            props.login(responseUser)
-            props.history.push("/");
-
-            return;
-        }
-
-        // Get error message from response
-        const errorMessage = await response.text();
-
-        setError(
-            <Alert severity="error">
-                {errorMessage}
-            </Alert>
-        );
+        checkResponse(response);
 
         return;
     }
 
     const loginGoogle = async (response: any) => {
+        setError(<div />);
+
         if (!response?.tokenId) {
             return;
         }
@@ -84,24 +93,7 @@ const Login = (props: any) => {
 
         response = await fetch(config.API.USER_SERVICE + "/login/google", options);
 
-        // OK status code
-        if (response.status === 200) {
-            setError(<div/>);
-            const responseUser = await response.json();
-            props.login(responseUser)
-            props.history.push("/");
-
-            return;
-        }
-
-        // Get error message from response
-        const errorMessage = await response.text();
-
-        setError(
-            <Alert severity="error">
-                {errorMessage}
-            </Alert>
-        );
+        checkResponse(response);
 
         return;
     }
@@ -174,8 +166,8 @@ const Login = (props: any) => {
 
 const mapStateToProps = (state: any) => {
     return {
-        user: state.user
-    };
+        user: state.userReducer.user
+    }
 }
 
 const mapDispatchToProps = (dispatch: any) => {

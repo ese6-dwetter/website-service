@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Redirect, withRouter } from "react-router-dom";
 import { Button, Input, InputLabel, InputAdornment, IconButton } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import { login } from "../../redux/user.actions";
+import { login, logout } from "../../redux/user.actions";
 import { StyledRegisterForm, StyledFormControl, StyledGoogleLogin } from "./Register.styles";
 import config from "../../config.json";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
@@ -72,8 +72,35 @@ const Register = (props: any): any => {
         return true;
     }
 
-    // Register with password
+    /**
+     * Check if the response status is 200
+     * @param response from an API call
+     */  
+    const checkResponse = async (response: any) => {
+        // OK status code
+        if (response.status === 200) {
+            setError(<div/>);
+            props.history.push("/login");
+
+            return;
+        }
+
+        // Get error message from response
+        const errorMessage = await response.text();
+
+        setError(
+            <Alert severity="error">
+                {errorMessage}
+            </Alert>
+        );
+    }
+
+    /**
+     * Register with password
+     */
     const registerPassword = async () => {
+        setError(<div />);
+
         // Validate input
         if (!validateInput()) {   
             return;
@@ -98,27 +125,14 @@ const Register = (props: any): any => {
         // Send API call
         const response = await fetch(config.API.USER_SERVICE + "/register/password", options);
 
-        // OK status code
-        if (response.status === 200) {
-            setError(<div/>)
-            props.history.push("/login");
-
-            return;
-        }
-
-        // Get error message from response
-        const errorMessage = await response.text();
-
-        setError(
-            <Alert severity="error">
-                {errorMessage}
-            </Alert>
-        );
+        checkResponse(response);
 
         return;
     }
 
     const registerGoogle = async (response: any) => {
+        setError(<div />);
+
         if (!response?.tokenId) {
             return;
         }
@@ -137,27 +151,12 @@ const Register = (props: any): any => {
         // Send API call
         response = await fetch(config.API.USER_SERVICE + '/register/google', options);
 
-        // OK status code
-        if (response.status === 200) {
-            setError(<div/>)
-            props.history.push("/login");
-
-            return;
-        }
-
-        // Get error message from response
-        const errorMessage = await response.text();
-
-        setError(
-            <Alert severity="error">
-                {errorMessage}
-            </Alert>
-        );
+        checkResponse(response);
 
         return;
     }
 
-    const content = props?.user?.isAuthenticated ? (
+    const content = props.userReducer ? (
         <Redirect to={{
             pathname: '/'
         }} />
@@ -257,18 +256,18 @@ const Register = (props: any): any => {
             {content}
         </div>
     );
-};
+}
 
 const mapStateToProps = (state: any) => {
     return {
-        user: state.user
-    };
-};
+        user: state.userReducer.user
+    }
+}
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        login: (user: User) => {
-            dispatch(login(user));
+        logout: () => {
+            dispatch(logout());
         }
     }
 }

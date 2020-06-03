@@ -3,7 +3,7 @@ import thunkMiddleware from "redux-thunk";
 import { createLogger } from "redux-logger";
 import userReducer from "./user.reducer";
 
-function loadFromLocalStorage(): any {
+function loadFromLocalStorage(): undefined {
     try {
         const serializedState = localStorage.getItem("state");
         if (serializedState === null) return undefined;
@@ -15,7 +15,7 @@ function loadFromLocalStorage(): any {
     }
 }
 
-function saveToLocalStorage(state: any): any {
+function saveToLocalStorage(state: any): void {
     try {
         const serializedState = JSON.stringify(state);
         localStorage.setItem("state", serializedState)

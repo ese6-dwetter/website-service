@@ -1,13 +1,15 @@
 export default interface User {
+    IsAuthenticated: boolean;
     Id: string;
-    Name: string;
+    Username: string;
     Email: string;
     Token: string;
 }
 
 export const initialUserState: User = {
+    IsAuthenticated: false,
     Id: '',
-    Name: '',
+    Username: '',
     Email: '',
     Token: '',
 }

@@ -2,26 +2,28 @@ import { UserActionType } from "./user.types";
 import { initialUserState } from "../entities/User";
 
 const initialState = {
-    user: initialUserState,
-    isAuthenticated: false
+    user: initialUserState
 };
 
 function userReducer(state = initialState, action: any): any {
     switch (action.type) {
-        case UserActionType.Login:
+        case UserActionType.LOGIN:
+            action.payload.isAuthenticated = true;
+            
             return state = {
                 ...state,
-                user: action.payload,
-                isAuthenticated: true
+                user: action.payload
             };
-        case UserActionType.Logout:
+        case UserActionType.LOGOUT:
             return state = {
                 ...state,
-                user: initialUserState,
-                isAuthenticated: false
+                user: initialUserState
             };
         default:
-            return state;
+            return state = {
+                ...state,
+                user: initialUserState
+            };
     }
 }
 

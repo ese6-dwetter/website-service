@@ -4,7 +4,7 @@ import User from "../entities/User";
 export function login(user: User) {
     return (dispatch: any) => {
         dispatch({
-            type: UserActionType.Login,
+            type: UserActionType.LOGIN,
             payload: user,
         });
     }
@@ -13,7 +13,7 @@ export function login(user: User) {
 export function logout() {
     return (dispatch: any) => {
         dispatch({
-            type: UserActionType.Logout,
+            type: UserActionType.LOGOUT,
             payload: '',
         });
     }
