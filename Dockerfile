@@ -10,6 +10,9 @@ COPY nginx.conf /etc/nginx/conf.d
 # Copy the /build folder into the current work directory
 COPY /build /usr/share/nginx/html
 
+# Make sure the port is exposed
+EXPOSE 80
+
 # Execute nginx command
 # '-g daemon off;' will ensure NGINX stays at the foreground for Docker to track properly
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
