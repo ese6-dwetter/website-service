@@ -8,8 +8,6 @@ on:
 env:
   DOCKER_ORGANIZATION: ese6dwetter
   DOCKER_REPOSITORY: website-microservice
-  DOCKER_IMAGE: ${{ secrets.DOCKER_ORGANIZATION }}/${{ secrets.REPOSITORY_NAME }}:${{ github.ref }}
-  DOCKER_IMAGE_LATEST: ${{ secrets.DOCKER_ORGANIZATION }}/${{ secrets.REPOSITORY_NAME }}:latest
 
 jobs:
   build:
@@ -80,13 +78,16 @@ jobs:
         with:
           name: nginx-artifact
           path: .
+          
+      - name: Get tag version
+        id: get_tag_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
       - name: Deliver Docker image
         run: |
           docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
-          docker build -t $DOCKER_IMAGE -t $DOCKER_IMAGE_LATEST .
-          docker push $DOCKER_IMAGE
-          docker push $DOCKER_IMAGE_LATEST
+          docker build -t $DOCKER_ORGANIZATION/$DOCKER_REPOSITORY:${{ steps.get_tag_version.outputs.VERSION }} .
+          docker push $DOCKER_ORGANIZATION/$DOCKER_REPOSITORY:${{ steps.get_tag_version.outputs.VERSION }}
   
   deploy:
     needs: deliver
@@ -97,6 +98,10 @@ jobs:
         with:
             name: kubernetes-artifact
             path: ./kube
+          
+      - name: Get tag version
+        id: get_tag_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
       
       - name: Setup Kubectl
         uses: azure/setup-kubectl@v1
@@ -110,7 +115,7 @@ jobs:
       - name: Deploy Kubernetes with manifests
         uses: azure/k8s-deploy@v1
         with:
-            namespace: dwetter-develop
+            namespace: dwetter
             manifests: |
               ./kube/autoscaler.yaml
               ./kube/certificate.yaml
@@ -118,4 +123,4 @@ jobs:
               ./kube/ingress.yaml
               ./kube/service.yaml
             images:  |
-              $DOCKER_ORGANIZATION/$DOCKER_REPOSITORY:${{ github.ref }}
+              $DOCKER_ORGANIZATION/$DOCKER_REPOSITORY:${{ steps.get_tag_version.outputs.VERSION }}
