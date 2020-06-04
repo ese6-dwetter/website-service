@@ -1,0 +1,10 @@
+{
+    "API": {
+        "USER_SERVICE": "127.0.0.1:4001",
+        "POST_SERVICE": "127.0.0.1:4002",
+        "PROFILE_SERVICE": "127.0.0.1:4003"
+    },
+    "GOOGLE": {
+        "CLIENT_ID": ""
+    }
+}
