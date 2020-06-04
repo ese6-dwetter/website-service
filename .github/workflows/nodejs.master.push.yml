@@ -2,10 +2,13 @@ name: Node.js push on master branch
 
 on:
   push:
-    branches: [master]
+    tags: 
+      - '**'
 
 env:
-  DOCKER_IMAGE: ${{ secrets.DOCKER_ORGANIZATION }}/${{ secrets.REPOSITORY_NAME }}:${{ github.sha }}
+  DOCKER_ORGANIZATION: ese6dwetter
+  DOCKER_REPOSITORY: website-microservice
+  DOCKER_IMAGE: ${{ secrets.DOCKER_ORGANIZATION }}/${{ secrets.REPOSITORY_NAME }}:${{ github.ref }}
   DOCKER_IMAGE_LATEST: ${{ secrets.DOCKER_ORGANIZATION }}/${{ secrets.REPOSITORY_NAME }}:latest
 
 jobs:
@@ -42,6 +45,12 @@ jobs:
           name: dockerfile-artifact
           path: ./Dockerfile
 
+      - name: Upload NGINX artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: nginx-artifact
+          path: ./nginx.conf
+
       - name: Upload Kubernetes artifact
         uses: actions/upload-artifact@v1
         with:
@@ -62,6 +71,12 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: dockerfile-artifact
+          path: .
+
+      - name: Download NGINX artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: nginx-artifact
           path: .
 
       - name: Deliver Docker image
@@ -95,10 +110,10 @@ jobs:
         with:
             namespace: dwetter-develop
             manifests: |
+              ./kube/autoscaler.yaml
               ./kube/certificate.yaml
               ./kube/deployment.yaml
               ./kube/ingress.yaml
               ./kube/service.yaml
-              ./kube/autoscaler.yaml
             images:  |
-              ${{ secrets.DOCKER_ORGANIZATION }}/${{ secrets.REPOSITORY_NAME }}:${{ github.sha }}
+              $DOCKER_ORGANIZATION/$DOCKER_REPOSITORY:${{ github.ref }}
