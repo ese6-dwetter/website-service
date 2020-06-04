@@ -8,7 +8,7 @@ on:
 env:
   DOCKER_ORGANIZATION: ese6dwetter
   DOCKER_REPOSITORY: website-microservice
-  DOCKER_IMAGE: ${{ secrets.DOCKER_ORGANIZATION }}/${{ secrets.REPOSITORY_NAME }}:${{ github.event.release.tag_name }}
+  DOCKER_IMAGE: ${{ secrets.DOCKER_ORGANIZATION }}/${{ secrets.REPOSITORY_NAME }}:${GITHUB_REF#refs/tags/}
   DOCKER_IMAGE_LATEST: ${{ secrets.DOCKER_ORGANIZATION }}/${{ secrets.REPOSITORY_NAME }}:latest
 
 jobs:
@@ -118,4 +118,4 @@ jobs:
               ./kube/ingress.yaml
               ./kube/service.yaml
             images:  |
-              $DOCKER_ORGANIZATION/$DOCKER_REPOSITORY:${{ github.event.release.tag_name }}
+              $DOCKER_ORGANIZATION/$DOCKER_REPOSITORY:${GITHUB_REF#refs/tags/}
