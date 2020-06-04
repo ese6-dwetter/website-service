@@ -114,4 +114,4 @@ jobs:
               ./kube_develop/ingress.yaml
               ./kube_develop/service.yaml
             images:  |
-              $DOCKER_ORGANIZATION/$DOCKER_REPOSITORY:${{ github.sha }}
+              ese6dwetter/website-microservice:${{ github.sha }}
