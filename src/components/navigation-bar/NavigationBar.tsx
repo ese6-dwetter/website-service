@@ -9,7 +9,6 @@ const NavigationBar = (props: any): JSX.Element => {
     const [items, setItems] = React.useState(<div />);
     
     const updateNavigation = async (): Promise<void> => {
-        console.log(props.authenticationReducer)
         if (props.authenticationReducer.isAuthenticated) {
             setItems(
                 <div>
