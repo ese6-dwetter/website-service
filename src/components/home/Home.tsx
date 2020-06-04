@@ -1,6 +1,7 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 
-function Home() {
+function Home(): JSX.Element {
     return (
         <div>Home</div>
     );

@@ -3,17 +3,13 @@ import { connect } from "react-redux";
 import { Redirect, withRouter } from "react-router-dom";
 import { Button, Input, InputLabel, InputAdornment, IconButton } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import { login, logout } from "../../redux/user.actions";
+import { loginAction, logoutAction } from "../../redux/authentication.actions";
 import { StyledRegisterForm, StyledFormControl, StyledGoogleLogin } from "./Register.styles";
 import config from "../../config.json";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
-import User from "../../entities/User";
-
-interface RegisterUser {
-    username: string;
-    email: string;
-    password: string;
-}
+import User from "../../entities/User.entity";
+import RegisterUser from "../../entities/RegisterUser.entity";
+import { registerPasswordFetch, registerGoogleFetch } from "../../networking/register";
 
 const Register = (props: any): any => {
     const [username, setUsername] = React.useState('')
@@ -75,30 +71,15 @@ const Register = (props: any): any => {
     /**
      * Check if the response status is 200
      * @param response from an API call
-     */  
-    const checkResponse = async (response: any) => {
-        // OK status code
-        if (response.status === 200) {
-            setError(<div/>);
-            props.history.push("/login");
-
-            return;
-        }
-
-        // Get error message from response
-        const errorMessage = await response.text();
-
-        setError(
-            <Alert severity="error">
-                {errorMessage}
-            </Alert>
-        );
+     */
+    const checkResponse = async (response: any): Promise<void> => {
     }
 
     /**
      * Register with password
      */
-    const registerPassword = async () => {
+    const registerPassword = async (): Promise<void> => {
+        // Reset error message
         setError(<div />);
 
         // Validate input
@@ -113,45 +94,51 @@ const Register = (props: any): any => {
             password: password
         };
 
-        // Create request options
-        const options: RequestInit = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(user),
-        };
+        const response = await registerPasswordFetch(user);
 
-        // Send API call
-        const response = await fetch(config.API.USER_SERVICE + "/register/password", options);
+        
+        // OK status code
+        if (response.status === 200) {
+            props.history.push("/");
 
-        checkResponse(response);
-
-        return;
-    }
-
-    const registerGoogle = async (response: any) => {
-        setError(<div />);
-
-        if (!response?.tokenId) {
             return;
         }
 
-        // Create request options
-        const options: RequestInit = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            mode: 'cors',
-            cache: 'default',
-            body: JSON.stringify({ tokenId: response.tokenId })
+        // Get error message from response
+        const errorMessage = await response.text();
+
+        setError(
+            <Alert severity="error">
+                {errorMessage}
+            </Alert>
+        );
+    }
+
+    const registerGoogle = async (googleLoginResponse: any): Promise<void> => {
+        // Reset error message
+        setError(<div />);
+
+        if (!googleLoginResponse.tokenId) {
+            return;
         }
 
-        // Send API call
-        response = await fetch(config.API.USER_SERVICE + '/register/google', options);
+        const response = await registerGoogleFetch(googleLoginResponse.tokenId)
 
-        checkResponse(response);
+        // OK status code
+        if (response.status === 200) {
+            props.history.push("/");
+
+            return;
+        }
+
+        // Get error message from response
+        const errorMessage = await response.text();
+
+        setError(
+            <Alert severity="error">
+                {errorMessage}
+            </Alert>
+        );
 
         return;
     }
@@ -258,16 +245,16 @@ const Register = (props: any): any => {
     );
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: any): any => {
     return {
-        user: state.userReducer.user
+        authenticationReducer: state.authenticationReducer
     }
 }
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: any): any => {
     return {
-        logout: () => {
-            dispatch(logout());
+        logout: (): void => {
+            dispatch(logoutAction());
         }
     }
 }

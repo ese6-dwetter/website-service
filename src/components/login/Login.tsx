@@ -1,20 +1,17 @@
-import React from "react";
+import React, { Props } from "react";
 import config from "../../config.json";
 import { Alert } from "@material-ui/lab";
 import { StyledFormControl, StyledLoginForm, StyledGoogleLogin } from "./Login.styles";
 import { InputLabel, Input, InputAdornment, IconButton, Button } from "@material-ui/core";
 import { Redirect, withRouter } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
-import { login } from "../../redux/user.actions";
+import { loginAction } from "../../redux/authentication.actions";
 import { connect } from "react-redux";
-import User from "../../entities/User";
+import User from "../../entities/User.entity";
+import LoginUser from "../../entities/LoginUser.entity";
+import { loginGoogleFetch, loginPasswordFetch } from "../../networking/login";
 
-interface LoginUser {
-    email: string;
-    password: string;
-}
-
-const Login = (props: any) => {
+const Login = (props: any): JSX.Element => {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
 
@@ -22,19 +19,27 @@ const Login = (props: any) => {
     
     const [error, setError] = React.useState(<div />);
 
-    const onEmailChange = (event: any) => setEmail(event.target.value);
-    const onPasswordChange = (event: any) => setPassword(event.target.value);
+    const onEmailChange = (event: any): void => setEmail(event?.target.value);
+    const onPasswordChange = (event: any): void => setPassword(event?.target.value);
 
-    const handleClickShowPassword = () => setShowPassword(!showPassword);
-    const handleMouseDownPassword = (event: any) => event?.preventDefault();
+    const handleClickShowPassword = (): void => setShowPassword(!showPassword);
+    const handleMouseDownPassword = (event: any): void => event?.preventDefault();
 
-    const checkResponse = async (response: any) => {
+    const loginPassword = async (): Promise<void> => {
+        // Reset error message
+        setError(<div />);
 
+        const user: LoginUser = {
+            email: email,
+            password: password
+        }
+
+        const response = await loginPasswordFetch(user)
+        
         // OK status code
         if (response.status === 200) {
-            const responseUser = await response.json();
-            console.log(responseUser)
-            props.login(responseUser)
+            const responseUser: User = await response.json();
+            props.login(responseUser);
             props.history.push("/");
 
             return;
@@ -50,55 +55,36 @@ const Login = (props: any) => {
         );
     }
 
-    const loginPassword = async () => {
+    const loginGoogle = async (googleLoginResponse: any): Promise<void> => {
+        // Reset error message
         setError(<div />);
 
-        const user: LoginUser = {
-            email: email,
-            password: password
-        }
-
-        const options: RequestInit = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(user),
-        }
-
-        // Send API call
-        const response = await fetch(config.API.USER_SERVICE + "/login/password", options);
-        
-        checkResponse(response);
-
-        return;
-    }
-
-    const loginGoogle = async (response: any) => {
-        setError(<div />);
-
-        if (!response?.tokenId) {
+        if (!googleLoginResponse.tokenId) {
             return;
         }
 
-        const options: RequestInit = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            mode: 'cors',
-            cache: 'default',
-            body: JSON.stringify({tokenId: response.tokenId}),
+        const response = await loginGoogleFetch(googleLoginResponse.tokenId);
+
+        // OK status code
+        if (response.status === 200) {
+            const responseUser: User = await response.json();
+            props.login(responseUser);
+            props.history.push("/");
+
+            return;
         }
 
-        response = await fetch(config.API.USER_SERVICE + "/login/google", options);
+        // Get error message from response
+        const errorMessage = await response.text();
 
-        checkResponse(response);
-
-        return;
+        setError(
+            <Alert severity="error">
+                {errorMessage}
+            </Alert>
+        );
     }
 
-    const content = props?.user?.isAuthenticated ? (
+    const content = props.authenticationReducer.isAuthenticated ? (
         <Redirect to={{
             pathname: '/'
         }} />
@@ -164,16 +150,16 @@ const Login = (props: any) => {
     );
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: any): any => {
     return {
-        user: state.userReducer.user
+        authenticationReducer: state.authenticationReducer
     }
 }
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: any): any => {
     return {
-        login: (user: User) => {
-            dispatch(login(user));
+        login: (user: User): void => {
+            dispatch(loginAction(user));
         }
     }
 }

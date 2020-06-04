@@ -1,9 +1,9 @@
 import React from "react";
 import { Redirect, withRouter } from "react-router-dom";
-import { logout } from "../../redux/user.actions";
+import { logoutAction } from "../../redux/authentication.actions";
 import { connect } from "react-redux";
 
-const Logout = (props: any) => {
+const Logout = (props: any): JSX.Element => {
     props.logout()
 
     return (
@@ -13,16 +13,16 @@ const Logout = (props: any) => {
     );
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: any): any => {
     return {
-        user: state.userReducer.user
+        authenticationReducer: state.authenticationReducer
     };
 }
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: any): any => {
     return {
-        logout: () => {
-            dispatch(logout());
+        logout: (): void => {
+            dispatch(logoutAction());
         }
     }
 }

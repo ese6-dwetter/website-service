@@ -1,15 +1,16 @@
 import React, { useEffect } from "react";
 import { StyledNavLink, StyledAccountCircle, StyledAppBar } from "./NavigationBar.styles"
-import { logout } from "../../redux/user.actions";
+import { logoutAction } from "../../redux/authentication.actions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { IconButton, Menu, MenuItem, Toolbar} from "@material-ui/core";
+import { IconButton, Toolbar} from "@material-ui/core";
 
-const NavigationBar = (props: any): any => {
+const NavigationBar = (props: any): JSX.Element => {
     const [items, setItems] = React.useState(<div />);
     
-    const updateNavigation = async () => {
-        if (props.user.isAuthenticated) {
+    const updateNavigation = async (): Promise<void> => {
+        console.log(props.authenticationReducer)
+        if (props.authenticationReducer.isAuthenticated) {
             setItems(
                 <div>
                     <IconButton
@@ -20,7 +21,7 @@ const NavigationBar = (props: any): any => {
                         </StyledNavLink>
                     </IconButton>
                     <StyledNavLink exact to="/logout">
-                        Log Out {props.user.username}
+                        Log Out {props.authenticationReducer.user.username}
                     </StyledNavLink>
                 </div>
             )
@@ -54,17 +55,16 @@ const NavigationBar = (props: any): any => {
     )
 }
 
-const mapStateToProps = (state: any) => {
-    console.log(state)
+const mapStateToProps = (state: any): any => {
     return {
-        user: state.userReducer.user
+        authenticationReducer: state.authenticationReducer
     }
 }
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: any): any => {
     return {
-        logout: () => {
-            dispatch(logout());
+        logout: (): void => {
+            dispatch(logoutAction());
         }
     }
 }

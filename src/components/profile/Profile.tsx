@@ -1,25 +1,25 @@
 import React from "react";
-import { login } from "../../redux/user.actions";
-import User from "../../entities/User";
+import { loginAction } from "../../redux/authentication.actions";
+import User from "../../entities/User.entity";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
-const Profile = () =>{
+const Profile = (): JSX.Element =>{
     return (
         <div>Profile</div>
     );
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: any): any => {
     return {
-        user: state.userReducer.user
+        authenticationReducer: state.authenticationReducer
     }
 }
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: any): any => {
     return {
-        login: (user: User) => {
-            dispatch(login(user));
+        login: (user: User): void => {
+            dispatch(loginAction(user));
         }
     }
 }
