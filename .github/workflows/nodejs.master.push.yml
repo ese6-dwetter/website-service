@@ -27,11 +27,13 @@ jobs:
 
       - name: Build
         run: npm run build --if-present
+        env:
+          CI: false
       
       - name: Test
         run: npm test
         env:
-          CI: true
+          CI: false
 
       - name: Upload release artifact
         uses: actions/upload-artifact@v1
