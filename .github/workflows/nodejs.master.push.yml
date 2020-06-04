@@ -8,6 +8,7 @@ on:
 env:
   DOCKER_ORGANIZATION: ese6dwetter
   DOCKER_REPOSITORY: website-microservice
+  KUBERNETES_NAMESPACE: dwetter
 
 jobs:
   build:
@@ -86,8 +87,8 @@ jobs:
       - name: Deliver Docker image
         run: |
           docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
-          docker build -t $DOCKER_ORGANIZATION/$DOCKER_REPOSITORY:${{ steps.get_tag_version.outputs.VERSION }} .
-          docker push $DOCKER_ORGANIZATION/$DOCKER_REPOSITORY:${{ steps.get_tag_version.outputs.VERSION }}
+          docker build -t ${{ env.DOCKER_ORGANIZATION }}/${{ env.DOCKER_REPOSITORY }}:${{ steps.get_tag_version.outputs.VERSION }} .
+          docker push ${{ env.DOCKER_ORGANIZATION }}/${{ env.DOCKER_REPOSITORY }}:${{ steps.get_tag_version.outputs.VERSION }}
   
   deploy:
     needs: deliver
@@ -115,7 +116,7 @@ jobs:
       - name: Deploy Kubernetes with manifests
         uses: azure/k8s-deploy@v1
         with:
-            namespace: dwetter
+            namespace: ${{ env.KUBERNETES_NAMESPACE }}
             manifests: |
               ./kube/autoscaler.yaml
               ./kube/certificate.yaml
@@ -123,4 +124,4 @@ jobs:
               ./kube/ingress.yaml
               ./kube/service.yaml
             images:  |
-              $DOCKER_ORGANIZATION/$DOCKER_REPOSITORY:${{ steps.get_tag_version.outputs.VERSION }}
+              ${{ env.DOCKER_ORGANIZATION }}/${{ env.DOCKER_REPOSITORY }}:${{ steps.get_tag_version.outputs.VERSION }}
