@@ -5,12 +5,12 @@ import GoogleLogin from "react-google-login";
 export const StyledLoginForm = styled.form`
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    margin: 100px;
+    margin: 100px auto;
+    width: 500px;
     padding: 20px;
     border-radius: 20px;
-    background-color: #EEEEEE
+    background-color: #FFFFFF
 `;
 
 export const StyledFormControl = styled(FormControl)`
@@ -19,4 +19,4 @@ export const StyledFormControl = styled(FormControl)`
 
 export const StyledGoogleLogin = styled(GoogleLogin)`
     margin: 10px;
-`
+`;

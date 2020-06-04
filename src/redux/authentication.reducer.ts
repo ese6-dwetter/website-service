@@ -1,20 +1,20 @@
-import { UserActionType } from "./user.types";
-import { initialUserState } from "../entities/User";
+import { AuthenticationActionType } from "./authentication.action.types";
+import { initialUserState } from "../entities/User.entity";
 
-const initialState = {
+const initialAuthenticationState = {
     user: initialUserState,
     isAuthenticated: false
 };
 
-function userReducer(state = initialState, action: any): any {
+const authenticationReducer = (state = initialAuthenticationState, action: any): any => {
     switch (action.type) {
-        case UserActionType.Login:
+        case AuthenticationActionType.LOGIN:            
             return state = {
                 ...state,
                 user: action.payload,
                 isAuthenticated: true
             };
-        case UserActionType.Logout:
+        case AuthenticationActionType.LOGOUT:
             return state = {
                 ...state,
                 user: initialUserState,
@@ -25,4 +25,4 @@ function userReducer(state = initialState, action: any): any {
     }
 }
 
-export default userReducer
+export default authenticationReducer

@@ -3,17 +3,13 @@ import { connect } from "react-redux";
 import { Redirect, withRouter } from "react-router-dom";
 import { Button, Input, InputLabel, InputAdornment, IconButton } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import { login } from "../../redux/user.actions";
+import { loginAction, logoutAction } from "../../redux/authentication.actions";
 import { StyledRegisterForm, StyledFormControl, StyledGoogleLogin } from "./Register.styles";
 import config from "../../config.json";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
-import User from "../../entities/User";
-
-interface RegisterUser {
-    username: string;
-    email: string;
-    password: string;
-}
+import User from "../../entities/User.entity";
+import RegisterUser from "../../entities/RegisterUser.entity";
+import { registerPasswordFetch, registerGoogleFetch } from "../../networking/register";
 
 const Register = (props: any): any => {
     const [username, setUsername] = React.useState('')
@@ -72,8 +68,20 @@ const Register = (props: any): any => {
         return true;
     }
 
-    // Register with password
-    const registerPassword = async () => {
+    /**
+     * Check if the response status is 200
+     * @param response from an API call
+     */
+    const checkResponse = async (response: any): Promise<void> => {
+    }
+
+    /**
+     * Register with password
+     */
+    const registerPassword = async (): Promise<void> => {
+        // Reset error message
+        setError(<div />);
+
         // Validate input
         if (!validateInput()) {   
             return;
@@ -86,22 +94,39 @@ const Register = (props: any): any => {
             password: password
         };
 
-        // Create request options
-        const options: RequestInit = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(user),
-        };
+        const response = await registerPasswordFetch(user);
 
-        // Send API call
-        const response = await fetch(config.API.USER_SERVICE + "/register/password", options);
+        
+        // OK status code
+        if (response.status === 200) {
+            props.history.push("/");
+
+            return;
+        }
+
+        // Get error message from response
+        const errorMessage = await response.text();
+
+        setError(
+            <Alert severity="error">
+                {errorMessage}
+            </Alert>
+        );
+    }
+
+    const registerGoogle = async (googleLoginResponse: any): Promise<void> => {
+        // Reset error message
+        setError(<div />);
+
+        if (!googleLoginResponse.tokenId) {
+            return;
+        }
+
+        const response = await registerGoogleFetch(googleLoginResponse.tokenId)
 
         // OK status code
         if (response.status === 200) {
-            setError(<div/>)
-            props.history.push("/login");
+            props.history.push("/");
 
             return;
         }
@@ -118,46 +143,7 @@ const Register = (props: any): any => {
         return;
     }
 
-    const registerGoogle = async (response: any) => {
-        if (!response?.tokenId) {
-            return;
-        }
-
-        // Create request options
-        const options: RequestInit = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            mode: 'cors',
-            cache: 'default',
-            body: JSON.stringify({ tokenId: response.tokenId })
-        }
-
-        // Send API call
-        response = await fetch(config.API.USER_SERVICE + '/register/google', options);
-
-        // OK status code
-        if (response.status === 200) {
-            setError(<div/>)
-            props.history.push("/login");
-
-            return;
-        }
-
-        // Get error message from response
-        const errorMessage = await response.text();
-
-        setError(
-            <Alert severity="error">
-                {errorMessage}
-            </Alert>
-        );
-
-        return;
-    }
-
-    const content = props?.user?.isAuthenticated ? (
+    const content = props.userReducer ? (
         <Redirect to={{
             pathname: '/'
         }} />
@@ -257,18 +243,18 @@ const Register = (props: any): any => {
             {content}
         </div>
     );
-};
+}
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: any): any => {
     return {
-        user: state.user
-    };
-};
+        authenticationReducer: state.authenticationReducer
+    }
+}
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: any): any => {
     return {
-        login: (user: User) => {
-            dispatch(login(user));
+        logout: (): void => {
+            dispatch(logoutAction());
         }
     }
 }

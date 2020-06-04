@@ -1,69 +1,46 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyledNavLink, StyledAccountCircle, StyledAppBar } from "./NavigationBar.styles"
-import { logout } from "../../redux/user.actions";
+import { logoutAction } from "../../redux/authentication.actions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { IconButton, Menu, MenuItem, Toolbar} from "@material-ui/core";
+import { IconButton, Toolbar} from "@material-ui/core";
 
-const NavigationBar = (props: any) => {
-    const [anchorElement, setAnchorElement] = React.useState<null | HTMLElement>(null);
-    const open = Boolean(anchorElement);
-
-    const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElement(event.currentTarget);
+const NavigationBar = (props: any): JSX.Element => {
+    const [items, setItems] = React.useState(<div />);
+    
+    const updateNavigation = async (): Promise<void> => {
+        if (props.authenticationReducer.isAuthenticated) {
+            setItems(
+                <div>
+                    <IconButton
+                        size="medium"
+                    >
+                        <StyledNavLink exact to="/profile">
+                            <StyledAccountCircle />
+                        </StyledNavLink>
+                    </IconButton>
+                    <StyledNavLink exact to="/logout">
+                        Log Out {props.authenticationReducer.user.username}
+                    </StyledNavLink>
+                </div>
+            )
+        } else {
+            setItems(
+                <div>
+                    <StyledNavLink exact to="/login">
+                        Log In
+                    </StyledNavLink>
+                    <StyledNavLink exact to="/register">
+                        Register
+                    </StyledNavLink>
+                </div>
+            )
+        }
     }
 
-    const handleClose = (): void => {
-        setAnchorElement(null);
-    }
-
-    const logout = (): void => {
-        handleClose();
-        props.logout();
-    }
-
-    // Use profile 
-    let items;
-    if (props?.user?.isAuthenticated) {
-        items = (
-            <div>
-                <IconButton
-                    onClick={handleMenu}
-                    size="small"
-                >
-                    <StyledAccountCircle />
-                </IconButton>
-                <Menu
-                    anchorEl={anchorElement}
-                    anchorOrigin={{
-                        vertical: "top",
-                        horizontal: "right"
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                        vertical: "top",
-                        horizontal: "right"
-                    }}
-                    open={open}
-                    onClose={handleClose}
-                >
-                    <MenuItem>{props.user.username}</MenuItem>
-                    <MenuItem onClick={logout}>Log Out</MenuItem>
-                </Menu>
-            </div>
-        )
-    } else {
-        items = (
-            <div>
-                <StyledNavLink exact to="/login">
-                    Log In
-                </StyledNavLink>
-                <StyledNavLink exact to="/register">
-                    Register
-                </StyledNavLink>
-            </div>
-        )
-    }
+    useEffect(() => {
+        updateNavigation();
+    }, [props]);
 
     return (
         <StyledAppBar>
@@ -77,16 +54,16 @@ const NavigationBar = (props: any) => {
     )
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: any): any => {
     return {
-        user: state.user
+        authenticationReducer: state.authenticationReducer
     }
 }
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: any): any => {
     return {
-        logout: () => {
-            dispatch(logout());
+        logout: (): void => {
+            dispatch(logoutAction());
         }
     }
 }

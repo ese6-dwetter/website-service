@@ -1,7 +1,7 @@
 import { applyMiddleware, combineReducers, createStore } from "redux";
 import thunkMiddleware from "redux-thunk";
 import { createLogger } from "redux-logger";
-import userReducer from "./user.reducer";
+import authenticationReducer from "./authentication.reducer";
 
 function loadFromLocalStorage(): any {
     try {
@@ -9,13 +9,11 @@ function loadFromLocalStorage(): any {
         if (serializedState === null) return undefined;
         return JSON.parse(serializedState);
     } catch (e) {
-        console.log(e);
-
         return undefined;
     }
 }
 
-function saveToLocalStorage(state: any): any {
+function saveToLocalStorage(state: any): void {
     try {
         const serializedState = JSON.stringify(state);
         localStorage.setItem("state", serializedState)
@@ -28,7 +26,7 @@ const loggerMiddleware = createLogger();
 
 const store = createStore(
     combineReducers({
-        userReducer,
+        authenticationReducer,
     }),
     loadFromLocalStorage(), // Preloaded state
     applyMiddleware(

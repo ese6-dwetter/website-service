@@ -12,7 +12,7 @@ export const StyledAppBar = styled(AppBar)`
 export const StyledAccountCircle = styled(AccountCircle)`
     width: 40;
     height: 50;
-    color: #FFFF00;
+    color: #FFFFFF;
 `;
 
 export const StyledNavLink = styled(NavLink)`

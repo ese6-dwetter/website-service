@@ -3,16 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/app/App';
 import * as serviceWorker from './serviceWorker';
-import { StylesProvider } from '@material-ui/core';
 
-ReactDOM.render(
-    <React.StrictMode>
-        <StylesProvider injectFirst>
-            <App />
-        </StylesProvider>
-    </React.StrictMode>,
-    document.getElementById('root')
-);
+ReactDOM.render(<App />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

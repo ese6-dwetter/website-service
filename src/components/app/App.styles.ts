@@ -1,6 +1,9 @@
 import styled from "styled-components";
 
-export const StyledContainer = styled.div`
+export const StyledAppContainer = styled.div`
+    height: 100vh;
+    width: 100vw;
+    background-image: url(./background.jpg);
     background-color: #FFFFFF;
     background-position: center;
     background-repeat: no-repeat;
