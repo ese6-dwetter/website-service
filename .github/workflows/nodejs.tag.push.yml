@@ -1,4 +1,4 @@
-name: Node.js push on master branch
+name: Node.js push on tag
 
 on:
   push:
