@@ -136,3 +136,13 @@ jobs:
         uses: foo-software/lighthouse-check-action@master
         with:
           urls: ${{ env.WEBSITE_URL }}
+
+  zap-scan:
+    needs: deploy
+    runs-on: ubuntu-18.04
+    name: OWASP ZAP Baseline scan
+    steps:
+      - name: Run OWASP ZAP baseline scan
+        uses: zaproxy/action-baseline@v0.3.0
+        with:
+          target: ${{ env.WEBSITE_URL }}
