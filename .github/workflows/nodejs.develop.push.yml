@@ -16,6 +16,8 @@ jobs:
       image: node:12.16.2
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Decrypt the GPG encrypted config files
         run: gpg --quiet --batch --yes --passphrase ${{ secrets.GPG_PASSPHRASE }} --output ./src/config.json --decrypt ./src/config.develop.json.gpg
@@ -27,6 +29,14 @@ jobs:
         run: npm run build --if-present
         env:
           CI: false
+
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: .
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       
       - name: Test
         run: npm test
