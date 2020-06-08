@@ -9,6 +9,7 @@ env:
   DOCKER_ORGANIZATION: ese6dwetter
   DOCKER_REPOSITORY: website-microservice
   KUBERNETES_NAMESPACE: dwetter
+  WEBSITE_URL: https://dwetter.nl
 
 jobs:
   build:
@@ -125,3 +126,13 @@ jobs:
               ./kube/service.yaml
             images:  |
               ${{ env.DOCKER_ORGANIZATION }}/${{ env.DOCKER_REPOSITORY }}:${{ steps.get_tag_version.outputs.VERSION }}
+  
+  lighthouse-check:
+    needs: deploy
+    runs-on: ubuntu-18.04
+    name: Lighthouse check
+    steps:
+      - name: Run Lighthouse check
+        uses: foo-software/lighthouse-check-action@master
+        with:
+          urls: ${{ env.WEBSITE_URL }}
