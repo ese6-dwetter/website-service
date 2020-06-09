@@ -5,10 +5,8 @@ on:
     branches: [feature/*]
 
 jobs:
-  build:
+  sonarcloud-scan:
     runs-on: ubuntu-18.04
-    container:
-      image: node:12.16.2
     steps:
       - uses: actions/checkout@v2
         with:
@@ -21,6 +19,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  build:
+    runs-on: ubuntu-18.04
+    container:
+      image: node:12.16.2
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       
       - name: Decrypt the GPG encrypted config files
         run: gpg --quiet --batch --yes --passphrase ${{ secrets.GPG_PASSPHRASE }} --output ./src/config.json --decrypt ./src/config.develop.json.gpg

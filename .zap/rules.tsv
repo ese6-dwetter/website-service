@@ -1,0 +1,4 @@
+10036 IGNORE (Server Leaks Version Information via "Server" HTTP Response Header Field)
+10015 IGNORE (Incomplete or No Cache-control and Pragma HTTP Header Set)
+10096 IGNORE (Timestamp Disclosure - Unix)
+10096 IGNORE (X-Content-Type-Options Header Missing)

@@ -12,10 +12,8 @@ env:
   WEBSITE_URL: https://dwetter.nl
 
 jobs:
-  build:
+  sonarcloud-scan:
     runs-on: ubuntu-18.04
-    container:
-      image: node:12.16.2
     steps:
       - uses: actions/checkout@v2
         with:
@@ -28,6 +26,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  build:
+    runs-on: ubuntu-18.04
+    container:
+      image: node:12.16.2
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Decrypt the GPG encrypted config files
         run: gpg --quiet --batch --yes --passphrase ${{ secrets.GPG_PASSPHRASE }} --output ./src/config.json --decrypt ./src/config.json.gpg
@@ -70,7 +77,7 @@ jobs:
           path: ./kube
   
   deliver:
-    needs: build
+    needs: [sonarcloud-scan, build]
     runs-on: ubuntu-18.04
     steps:
       - name: Download release artifact
@@ -145,7 +152,14 @@ jobs:
       - name: Run Lighthouse check
         uses: foo-software/lighthouse-check-action@master
         with:
+          outputDirectory: /lighthouse-report
           urls: ${{ env.WEBSITE_URL }}
+
+      - name: Upload Lighthouse report artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: lighthouse-report-artifact
+          path: /lighthouse-report
 
   zap-scan:
     needs: deploy
