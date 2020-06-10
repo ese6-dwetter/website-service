@@ -164,5 +164,5 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           target: ${{ env.WEBSITE_URL }}
-          rules_file_name: .zap/rules.tsv
+          rules_file_name: /.zap/rules.tsv
           cmd_options: -a
