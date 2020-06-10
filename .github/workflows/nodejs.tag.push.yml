@@ -154,7 +154,7 @@ jobs:
       - name: Run Lighthouse check
         uses: foo-software/lighthouse-check-action@master
         with:
-          outputDirectory: /lighthouse-report
+          outputDirectory: /tmp/lighthouse-report
           urls: ${{ env.WEBSITE_URL }}
 
       - name: Upload Lighthouse report artifact
