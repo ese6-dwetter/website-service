@@ -145,7 +145,6 @@ jobs:
       - name: Run Lighthouse check
         uses: foo-software/lighthouse-check-action@master
         with:
-          apiToken: ${{ secrets.LIGHTHOUSE_TOKEN }}
           outputDirectory: /lighthouse-report
           urls: ${{ env.WEBSITE_URL }}
 
