@@ -138,11 +138,14 @@ jobs:
   lighthouse-check:
     needs: deploy
     runs-on: ubuntu-18.04
-    name: Lighthouse check
     steps:
+      - name: Create /tmp/lighthouse-report directory
+        run: mkdir /tmp/lighthouse-report
+      
       - name: Run Lighthouse check
         uses: foo-software/lighthouse-check-action@master
         with:
+          apiToken: ${{ secrets.LIGHTHOUSE_TOKEN }}
           outputDirectory: /lighthouse-report
           urls: ${{ env.WEBSITE_URL }}
 
@@ -150,19 +153,20 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: lighthouse-report-artifact
-          path: /lighthouse-report
+          path: /tmp/lighthouse-report
 
-  zap-scan:
+  owasp-zap-baseline-scan:
     needs: deploy
     runs-on: ubuntu-18.04
-    name: OWASP ZAP Baseline scan
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Run OWASP ZAP baseline scan
         uses: zaproxy/action-baseline@v0.3.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           target: ${{ env.WEBSITE_URL }}
-          rules_file_name: /.zap/rules.tsv
+          rules_file_name: .zap/rules.tsv
           cmd_options: -a
