@@ -137,7 +137,7 @@ jobs:
             namespace: ${{ env.KUBERNETES_NAMESPACE }}
             manifests: |
               ./kube/autoscaler.yaml
-              ./kube/certificate.yaml
+              ./kube/cluster-issuer.yaml
               ./kube/deployment.yaml
               ./kube/ingress.yaml
               ./kube/service.yaml
