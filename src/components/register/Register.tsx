@@ -143,7 +143,7 @@ const Register = (props: any): any => {
         return;
     }
 
-    const content = props.userReducer ? (
+    const content = props.authenticationReducer.isAuthenticated ? (
         <Redirect to={{
             pathname: '/'
         }} />

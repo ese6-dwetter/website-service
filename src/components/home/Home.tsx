@@ -1,8 +1,19 @@
 import React from "react";
+import { StyledContainer } from "./Home.styles";
+import { PinDropSharp } from "@material-ui/icons";
 
-function Home(): JSX.Element {
+const Home = (props: any): JSX.Element => {
+    const content = (
+        <StyledContainer>
+            <h1>Welcome to Dwetter!</h1>
+            <h2>A Twitter clone by Davy de Haas</h2>
+        </StyledContainer>
+    )
+
     return (
-        <div>Home</div>
+        <div>
+            {content}
+        </div>
     );
 }
 
