@@ -8,14 +8,32 @@ env:
   DOCKER_ORGANIZATION: ese6dwetter
   DOCKER_REPOSITORY: website-microservice
   KUBERNETES_NAMESPACE: dwetter-develop
+  WEBSITE_URL: https://develop.dwetter.nl
 
 jobs:
+  sonarcloud-scan:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: .
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   build:
     runs-on: ubuntu-18.04
     container:
       image: node:12.16.2
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Decrypt the GPG encrypted config files
         run: gpg --quiet --batch --yes --passphrase ${{ secrets.GPG_PASSPHRASE }} --output ./src/config.json --decrypt ./src/config.develop.json.gpg
@@ -58,7 +76,7 @@ jobs:
           path: ./kube_develop
   
   deliver:
-    needs: build
+    needs: [sonarcloud-scan, build]
     runs-on: ubuntu-18.04
     steps:
       - name: Download release artifact
@@ -110,9 +128,57 @@ jobs:
             namespace: ${{ env.KUBERNETES_NAMESPACE }}
             manifests: |
               ./kube_develop/autoscaler.yaml
-              ./kube_develop/certificate.yaml
+              ./kube_develop/cluster-issuer.yaml
               ./kube_develop/deployment.yaml
               ./kube_develop/ingress.yaml
               ./kube_develop/service.yaml
             images:  |
               ${{ env.DOCKER_ORGANIZATION }}/${{ env.DOCKER_REPOSITORY }}:${{ github.sha }}
+  
+  lighthouse-check:
+    needs: deploy
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Create /tmp/lighthouse-report directory
+        run: mkdir /tmp/lighthouse-report
+      
+      - name: Run Lighthouse check
+        uses: foo-software/lighthouse-check-action@master
+        with:
+          outputDirectory: /tmp/lighthouse-report
+          urls: ${{ env.WEBSITE_URL }}
+
+      - name: Upload Lighthouse report artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: lighthouse-report-artifact
+          path: /tmp/lighthouse-report
+
+  k6-load-test:
+    needs: lighthouse-check
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+
+      - name: Run local k6 test
+        uses: k6io/action@v0.1
+        with:
+          filename: load-test.develop.js
+
+  # owasp-zap-baseline-scan:
+  #   needs: deploy
+  #   runs-on: ubuntu-18.04
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 0
+
+  #     - name: Run OWASP ZAP baseline scan
+  #       uses: zaproxy/action-baseline@v0.3.0
+  #       with:
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         target: ${{ env.WEBSITE_URL }}
+  #         rules_file_name: .zap/rules.tsv
+  #         cmd_options: -a

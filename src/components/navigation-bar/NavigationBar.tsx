@@ -15,11 +15,11 @@ const NavigationBar = (props: any): JSX.Element => {
                     <IconButton
                         size="medium"
                     >
-                        <StyledNavLink exact to="/profile">
+                        <StyledNavLink to="/profile">
                             <StyledAccountCircle />
                         </StyledNavLink>
                     </IconButton>
-                    <StyledNavLink exact to="/logout">
+                    <StyledNavLink to="/logout">
                         Log Out {props.authenticationReducer.user.username}
                     </StyledNavLink>
                 </div>
@@ -27,10 +27,10 @@ const NavigationBar = (props: any): JSX.Element => {
         } else {
             setItems(
                 <div>
-                    <StyledNavLink exact to="/login">
+                    <StyledNavLink to="/login">
                         Log In
                     </StyledNavLink>
-                    <StyledNavLink exact to="/register">
+                    <StyledNavLink to="/register">
                         Register
                     </StyledNavLink>
                 </div>
@@ -46,7 +46,7 @@ const NavigationBar = (props: any): JSX.Element => {
         <StyledAppBar>
             <Toolbar>
                 <StyledNavLink  to="/">
-                    Kwetter
+                    Dwetter
                 </StyledNavLink>
                 {items}
             </Toolbar>
