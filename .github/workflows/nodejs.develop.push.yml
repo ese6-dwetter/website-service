@@ -154,18 +154,31 @@ jobs:
           name: lighthouse-report-artifact
           path: /tmp/lighthouse-report
 
-  owasp-zap-baseline-scan:
-    needs: deploy
+  k6-load-test:
+    needs: lighthouse-check
     runs-on: ubuntu-18.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v1
         with:
           fetch-depth: 0
 
-      - name: Run OWASP ZAP baseline scan
-        uses: zaproxy/action-baseline@v0.3.0
+      - name: Run local k6 test
+        uses: k6io/action@v0.1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          target: ${{ env.WEBSITE_URL }}
-          rules_file_name: .zap/rules.tsv
-          cmd_options: -a
+          filename: load-test.develop.js
+
+  # owasp-zap-baseline-scan:
+  #   needs: deploy
+  #   runs-on: ubuntu-18.04
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 0
+
+  #     - name: Run OWASP ZAP baseline scan
+  #       uses: zaproxy/action-baseline@v0.3.0
+  #       with:
+  #         token: ${{ secrets.GITHUB_TOKEN }}
+  #         target: ${{ env.WEBSITE_URL }}
+  #         rules_file_name: .zap/rules.tsv
+  #         cmd_options: -a
