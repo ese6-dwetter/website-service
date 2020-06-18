@@ -9,7 +9,6 @@ export const options = {
   vus: 1000,
   thresholds: {
     "http_req_duration": ["p(95)<500"],
-    "http_req_tls_handshaking": ["p(95)<1000"],
     "check_failure_rate": [
       "rate<0.01",
       { threshold: "rate<=0.05", abortOnFail: true},
