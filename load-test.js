@@ -6,7 +6,7 @@ export const options = {
     "https://dwetter.nl": "1.1.1.1"
   },
   duration: "30s",
-  vus: 1000,
+  vus: 50,
   thresholds: {
     "http_req_duration": ["p(95)<500"],
     "check_failure_rate": [
