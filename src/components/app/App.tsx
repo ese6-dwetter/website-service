@@ -11,7 +11,7 @@ import Logout from "../logout/Logout";
 import Profile from "../profile/Profile";
 import { StylesProvider } from "@material-ui/core";
 
-const App = (): JSX.Element => {
+const App = (props: any): JSX.Element => {
     return (
         <React.StrictMode>
             <StylesProvider injectFirst>

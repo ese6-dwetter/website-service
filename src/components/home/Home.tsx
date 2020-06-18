@@ -1,6 +1,5 @@
 import React from "react";
 import { StyledContainer } from "./Home.styles";
-import { PinDropSharp } from "@material-ui/icons";
 
 const Home = (props: any): JSX.Element => {
     const content = (
