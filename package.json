@@ -52,6 +52,6 @@
     "@types/styled-components": "5.1.0",
     "@typescript-eslint/eslint-plugin": "3.4.0",
     "@typescript-eslint/parser": "3.4.0",
-    "typescript": "3.9.3"
+    "typescript": "3.9.5"
   }
 }
