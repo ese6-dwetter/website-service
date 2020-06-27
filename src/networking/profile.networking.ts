@@ -13,7 +13,7 @@ export const profileFetch = async (id: string): Promise<Response> => {
     return await fetch(config.API.PROFILE_SERVICE + '/profiles/' + id, options);
 }
 
-export const EditProfileFetch = async (profile: Profile, token: string): Promise<Response> => {
+export const editProfileFetch = async (profile: Profile, token: string): Promise<Response> => {
     const options: RequestInit = {
         method: 'PUT',
         headers: {
@@ -25,4 +25,30 @@ export const EditProfileFetch = async (profile: Profile, token: string): Promise
     }
 
     return await fetch(config.API.PROFILE_SERVICE + '/profiles', options);
+}
+
+export const followProfileFetch = async (profile: Profile, token: string): Promise<Response> => {
+    const options: RequestInit = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+        cache: 'default'
+    }
+
+    return await fetch(config.API.PROFILE_SERVICE + '/profiles/' + profile.id + '/follow', options);
+}
+
+export const unfollowProfileFetch = async (profile: Profile, token: string): Promise<Response> => {
+    const options: RequestInit = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+        cache: 'default'
+    }
+
+    return await fetch(config.API.PROFILE_SERVICE + '/profiles/' + profile.id + '/unfollow', options);
 }
