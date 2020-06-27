@@ -8,14 +8,15 @@ import { IconButton, Toolbar} from "@material-ui/core";
 const NavigationBar = (props: any): JSX.Element => {
     const [items, setItems] = React.useState(<div />);
     
-    const updateNavigation = async (): Promise<void> => {
+
+    useEffect(() => {
         if (props.authenticationReducer.isAuthenticated) {
             setItems(
                 <div>
                     <IconButton
                         size="medium"
                     >
-                        <StyledNavLink to="/profile">
+                        <StyledNavLink to={"/profile/" + props.authenticationReducer.user.id}>
                             <StyledAccountCircle />
                         </StyledNavLink>
                     </IconButton>
@@ -36,10 +37,6 @@ const NavigationBar = (props: any): JSX.Element => {
                 </div>
             )
         }
-    }
-
-    useEffect(() => {
-        updateNavigation();
     }, [props]);
 
     return (

@@ -8,7 +8,7 @@ import Register from "../register/Register";
 import Login from "../login/Login";
 import Home from "../home/Home";
 import Logout from "../logout/Logout";
-import Profile from "../profile/Profile";
+import ProfileDetails from "../profile/ProfileDetails";
 import { StylesProvider } from "@material-ui/core";
 
 const App = (props: any): JSX.Element => {
@@ -26,7 +26,7 @@ const App = (props: any): JSX.Element => {
                                     <Route exact path="/register" component={Register} />
                                     <Route exact path="/login" component={Login} />
                                     <Route exact path="/logout" component={Logout} />
-                                    <Route exact path="/profile" component={Profile} />
+                                    <Route exact path="/profile/:id" component={ProfileDetails} />
                                 </Switch>
                             </main>
                         </StyledAppContainer>

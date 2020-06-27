@@ -3,13 +3,12 @@ import { connect } from "react-redux";
 import { Redirect, withRouter } from "react-router-dom";
 import { Button, Input, InputLabel, InputAdornment, IconButton } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import { loginAction, logoutAction } from "../../redux/authentication.actions";
+import { logoutAction } from "../../redux/authentication.actions";
 import { StyledRegisterForm, StyledFormControl, StyledGoogleLogin } from "./Register.styles";
 import config from "../../config.json";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
-import User from "../../entities/User.entity";
 import RegisterUser from "../../entities/RegisterUser.entity";
-import { registerPasswordFetch, registerGoogleFetch } from "../../networking/register";
+import { registerPasswordFetch, registerGoogleFetch } from "../../networking/register.networking";
 
 const Register = (props: any): any => {
     const [username, setUsername] = React.useState('')
@@ -66,13 +65,6 @@ const Register = (props: any): any => {
         }
 
         return true;
-    }
-
-    /**
-     * Check if the response status is 200
-     * @param response from an API call
-     */
-    const checkResponse = async (response: any): Promise<void> => {
     }
 
     /**
