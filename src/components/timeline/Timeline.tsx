@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Redirect, withRouter } from "react-router-dom";
 import { Input, Button } from "@material-ui/core";
-import { StyledForm, StyledFormControl } from "./Timeline.styles";
+import { StyledForm, StyledFormControl, StyledContainer } from "./Timeline.styles";
 import CreatePost from "../../entities/CreatePost.entity";
 import { createPostFetch, postsFetch } from "../../networking/post.networking";
 import { Alert } from "@material-ui/lab";
@@ -70,11 +70,11 @@ const Timeline = (props: any): JSX.Element => {
 
             setPosts(
                 <StyledContainer>
-                    
+                    {posts.length}
                 </StyledContainer>
             )
-        })
-    })
+        })();
+    }, [props])
 
     const items = (
         <StyledForm>
@@ -95,12 +95,12 @@ const Timeline = (props: any): JSX.Element => {
                 Post
             </Button>
         </StyledForm>
-        {posts}
     )
 
     return (
         <div>
             {items}
+            {posts}
         </div>
     );
 }
