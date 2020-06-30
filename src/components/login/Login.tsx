@@ -1,4 +1,4 @@
-import React, { Props } from "react";
+import React from "react";
 import config from "../../config.json";
 import { Alert } from "@material-ui/lab";
 import { StyledFormControl, StyledLoginForm, StyledGoogleLogin } from "./Login.styles";
@@ -9,7 +9,7 @@ import { loginAction } from "../../redux/authentication.actions";
 import { connect } from "react-redux";
 import User from "../../entities/User.entity";
 import LoginUser from "../../entities/LoginUser.entity";
-import { loginGoogleFetch, loginPasswordFetch } from "../../networking/login";
+import { loginGoogleFetch, loginPasswordFetch } from "../../networking/login.networking";
 
 const Login = (props: any): JSX.Element => {
     const [email, setEmail] = React.useState('');
