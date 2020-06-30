@@ -16,7 +16,3 @@ export const StyledForm = styled.form`
 export const StyledFormControl = styled(FormControl)`
     margin: 10px;
 `;
-
-export const StyledGoogleLogin = styled(GoogleLogin)`
-    margin: 10px;
-`

@@ -4,14 +4,14 @@ import { Redirect, withRouter } from "react-router-dom";
 import { Button, Input, InputLabel, InputAdornment, IconButton } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { logoutAction } from "../../redux/authentication.actions";
-import { StyledRegisterForm, StyledFormControl, StyledGoogleLogin } from "./Register.styles";
+import { StyledForm, StyledFormControl, StyledGoogleLogin } from "./Register.styles";
 import config from "../../config.json";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import RegisterUser from "../../entities/RegisterUser.entity";
 import { registerPasswordFetch, registerGoogleFetch } from "../../networking/register.networking";
 
-const Register = (props: any): any => {
-    const [username, setUsername] = React.useState('')
+const Register = (props: any): JSX.Element => {
+    const [username, setUsername] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [repeatPassword, setRepeatPassword] = React.useState('');
@@ -88,7 +88,6 @@ const Register = (props: any): any => {
 
         const response = await registerPasswordFetch(user);
 
-        
         // OK status code
         if (response.status === 200) {
             props.history.push("/");
@@ -135,12 +134,12 @@ const Register = (props: any): any => {
         return;
     }
 
-    const content = props.authenticationReducer.isAuthenticated ? (
+    const items = props.authenticationReducer.isAuthenticated ? (
         <Redirect to={{
             pathname: '/'
         }} />
     ) : (
-        <StyledRegisterForm>
+        <StyledForm>
             {error}
             <h2>Register</h2>
             <StyledFormControl 
@@ -227,12 +226,12 @@ const Register = (props: any): any => {
                 onSuccess={registerGoogle}
                 onFailure={registerGoogle}
             />
-        </StyledRegisterForm>
+        </StyledForm>
     );
 
     return (
         <div>
-            {content}
+            {items}
         </div>
     );
 }
