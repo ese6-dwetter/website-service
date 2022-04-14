@@ -15,7 +15,7 @@ jobs:
   sonarcloud-scan:
     runs-on: ubuntu-18.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -32,7 +32,7 @@ jobs:
     container:
       image: node:12.16.2
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -167,7 +167,7 @@ jobs:
     needs: lighthouse-check
     runs-on: ubuntu-18.04
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
