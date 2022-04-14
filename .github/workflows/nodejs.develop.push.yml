@@ -52,25 +52,25 @@ jobs:
           CI: false
 
       - name: Upload release artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: release-artifact
           path: ./build
 
       - name: Upload Dockerfile artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: dockerfile-artifact
           path: ./Dockerfile
 
       - name: Upload NGINX artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: nginx-artifact
           path: ./nginx.conf
 
       - name: Upload Kubernetes artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: kubernetes-artifact
           path: ./kube_develop
