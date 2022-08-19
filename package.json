@@ -10,7 +10,7 @@
     "@testing-library/react": "10.4.9",
     "@testing-library/user-event": "12.0.11",
     "@types/jest": "27.4.1",
-    "@types/node": "12.12.47",
+    "@types/node": "16.11.51",
     "@types/react": "16.9.41",
     "@types/react-dom": "16.9.14",
     "react": "16.14.0",
